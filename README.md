@@ -1,3 +1,3 @@
 Curve
 =====
-Curve Game
+http://precyx.github.io/Curve.
