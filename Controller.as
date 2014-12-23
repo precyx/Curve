@@ -1,7 +1,6 @@
-package
+﻿package
 {
 	// adobe
-	import com.curve.CurveController;
 	import com.kiko.ui.UiController;
 	import flash.display.Sprite
 	import flash.events.StatusEvent;
@@ -10,7 +9,10 @@ package
 	import flash.display.MovieClip;
 	import net.hires.debug.Stats;
 	//
-	// own
+	// curve
+	import com.curve.CurveController;
+	import com.curve.powerup.Powerup;
+	import com.curve.powerup.PowerupController;
 	//
 	/*
 	 * Controller - Version 1.1
@@ -20,6 +22,7 @@ package
 	{
 		// controllers
 		public var curveController:CurveController;
+		public var powerupController:PowerupController;
 		public var uiController:UiController;
 		//
 		//
@@ -32,6 +35,7 @@ package
 			
 			// Controllers
 			curveController = new CurveController(this);
+			powerupController = new PowerupController(this);
 			uiController = new UiController(this);
 			
 		}

@@ -21,15 +21,15 @@ package com.curve
 	{
 		// interface
 		private static const NORMAL_SPEED = 1.55; // std:1.55
-		private static const CRITICAL_SIZE = 25; // std:35
+		private static const NORMAL_SIZE = 7; // std:7
 		private var xpos = 300;
 		private var ypos = 100;
-		public var curviness = 78; //std:93
+		public var curviness = 67; //std:93
 		public var speed = Curve.NORMAL_SPEED;
 		public var holesize = 250; // std:280
 		public var holeProbability = 7000; // std:7000
 		public var direction = 0; // (0,1,-1)
-		private var _size:Number = 7; //std: 7
+		private var _size:Number = Curve.NORMAL_SIZE;
 		private var _color:uint = 0xff00aa;
 		private var radius = 0;
 		private var ydegree = 0;
@@ -48,7 +48,7 @@ package com.curve
 		private var timer:Timer;
 		private var ghostchanged:Boolean = false;
 		// hitbox
-		private var hitbox:Shape;
+		public var hitbox:Shape;
 		//
 		//
 		public function Curve(xpos:Number = 0, ypos:Number = 0):void{
@@ -77,7 +77,7 @@ package com.curve
 			tile.y = ypos;
 			tile.rotation = xdegree / (Math.PI * 2) * 360;
 			//
-			if ( speed > Curve.NORMAL_SPEED || size > Curve.CRITICAL_SIZE) {
+			if ( speed > Curve.NORMAL_SPEED || size > Curve.NORMAL_SIZE) {
 				tile = new Shape();
 				this.addChild(tile);
 				tile.graphics.beginFill(color);
@@ -90,7 +90,7 @@ package com.curve
 			}
 			// hitbox
 			hitbox.graphics.clear();
-			hitbox.graphics.beginFill(0xff00aa, 0.5);
+			hitbox.graphics.beginFill(0x000000, 1.0);
 			drawHalfCircle(hitbox.graphics, 0, 0, size / 2);
 			hitbox.x = xpos;
 			hitbox.y = ypos;
@@ -100,7 +100,7 @@ package com.curve
 			// movement
 			xpos += Math.cos(xdegree) * speed;
 			ypos += Math.sin(ydegree) * speed;
-			radius =  curviness * (Math.sqrt(size)*0.7 + Math.sqrt(speed)*0.9 );
+			radius =  curviness * (Math.sqrt(size)*0.3 + Math.sqrt(speed)*2 );
 			ydegree += direction * (Math.PI*2 / radius * speed );
 			xdegree += direction * (Math.PI*2 / radius * speed );
 			tilewidth = Math.sqrt(speed) * 1.5;	

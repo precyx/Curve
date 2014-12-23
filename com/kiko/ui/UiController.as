@@ -56,7 +56,7 @@ package com.kiko.ui
 				var s:Stepper = Stepper( e.currentTarget);
 				controller.curveController.speed = s.value;
 			});
-			box.addStepper("Curviness", 0, 250, 78, 1).addEventListener(MouseEvent.CLICK, function(e) {
+			box.addStepper("Curviness", 0, 250, 67, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
 				controller.curveController.curviness = s.value;
 			});

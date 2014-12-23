@@ -7,10 +7,12 @@ package com.curve
 	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
 	//
-	// own
+	// curve
+	import com.curve.powerup.Powerup;
+	import com.curve.powerup.PowerupController;
 	//
 	/*
-	 * Curve - Version 1.1
+	 * Curve - Version 1.2
 	 * Controller
 	 */
 	public class CurveController extends Sprite
@@ -25,6 +27,8 @@ package com.curve
 		public var curviness:Number;
 		public var numCurves:Number =1;
 		public var holesize:Number;
+		public var colors:Array = [0xff4537, 0xff4fed, 0xffc72e, 0x63ba00, 0x00adb8, 0x7ba6ff, 0x842bff, 0xff9c03];
+		private var colorIndex:uint = 0;
 		//
 		//
 		public function CurveController(controller:Controller):void {
@@ -45,7 +49,15 @@ package com.curve
 		private function loopCurves(e:Event):void {
 			for each( var curve:Curve in curves) {
 				// @todo collision detection
-				if(!curve.stop) curve.draw(); //@debug
+				for each( var powerup:Powerup in controller.powerupController.powerups ) {
+					
+					if (curve.hitbox.hitTestObject(powerup)) {
+						controller.powerupController.activate(powerup, curve);
+					}
+				}
+				//
+				if (!curve.stop) curve.draw(); //@debug
+				// keys
 				if ( Keys.press(curve.leftKey) ) curve.direction = -1;
 				else if ( Keys.press(curve.rightKey) ) curve.direction = 1;
 				else curve.direction = 0;
@@ -54,7 +66,10 @@ package com.curve
 		
 		private function createCurve(xpos:Number, ypos:Number):void {
 			var curve:Curve = new Curve(xpos, ypos);
-			curve.color = Math.random() * 0xffffff;
+			
+			curve.color = colors[colorIndex];
+			colorIndex++;
+			if (colorIndex >= colors.length) colorIndex = 0;
 			// @debug
 			if(this.speed) curve.speed = this.speed;
 			if(this.size) curve.size = this.size;
