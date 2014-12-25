@@ -31,7 +31,7 @@ package com.curve.powerup
 			this.stage = View.getStage();
 			powerups = new Vector.<Powerup>();
 			//
-			timer = new Timer(Math2.rand(500, 5000));
+			timer = new Timer(Math2.rand(500, 1000));
 			timer.start();
 			timer.addEventListener(TimerEvent.TIMER, timertick);
 		}
@@ -49,10 +49,11 @@ package com.curve.powerup
 			powerups.push(p);
 		}
 		public function createRandom():void {
-			var i:uint = Math2.rand(0, 2);
+			var i:uint = Math2.rand(0, 3);
 			var powerup:Powerup;
 			if (i == 0) powerup = new Whale();
 			if (i == 1) powerup = new Flash();
+			if (i == 2) powerup = new Ant();
 			powerup.x = Math.random() * stage.stageWidth;
 			powerup.y = Math.random() * stage.stageHeight;
 			powerups.push(powerup);
@@ -67,8 +68,11 @@ package com.curve.powerup
 		}
 		
 		private function powerupEnd(e:GameEvent):void {
-			var t:Powerup = (e.target as Powerup);
-			t.rotation = 90;
+			var powerup:Powerup = (e.target as Powerup);
+			powerup.rotation = 90;
+			powerups.splice(powerups.indexOf(powerup), 1);
+			View.getStage().removeChild(powerup);
+			trace(powerups.length);
 		}
 		
 		//@cleanup

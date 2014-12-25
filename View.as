@@ -33,5 +33,8 @@ package
 		static public function getStage():Stage {
 			return view.stage;
 		}
+		static public function getSelf():View {
+			return view;
+		}
 	}//end-class
 }//end-pack

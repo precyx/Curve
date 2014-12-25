@@ -53,7 +53,7 @@ package com.curve.powerup
 		public function powerupStart(curve:Curve):void {
 			this.active = true;
 			affectedCurves.push(curve);
-			this.alpha = 0.5;
+			this.alpha = 0.2;
 			trace("powerup start");
 			timer.start();
 			timer.addEventListener(TimerEvent.TIMER, powerupEnd);

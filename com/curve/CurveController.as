@@ -1,11 +1,17 @@
 package com.curve
 {
 	// adobe
+	import flash.display.Bitmap;
 	import flash.display.Sprite
+	import flash.display.DisplayObjectContainer
 	import flash.events.Event;
 	import flash.ui.Keyboard;
 	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Rectangle;
+	import flash.geom.Point;
+	import flash.display.BitmapData;
+	import flash.utils.setTimeout;
 	//
 	// curve
 	import com.curve.powerup.Powerup;
@@ -34,12 +40,14 @@ package com.curve
 		public function CurveController(controller:Controller):void {
 			this.controller = controller;
 			initVars();
-			addEventListener(Event.ENTER_FRAME, loopCurves);
 			//
 			make(1, function(){
 				//createCurve( 300, Math.random() *500);
 				createCurve( 400, 250);
 			});
+			
+			addEventListener(Event.ENTER_FRAME, loopCurves);
+			
 		}
 		
 		private function initVars():void {
@@ -48,13 +56,23 @@ package com.curve
 		
 		private function loopCurves(e:Event):void {
 			for each( var curve:Curve in curves) {
-				// @todo collision detection
+				// @todo powerup collision
 				for each( var powerup:Powerup in controller.powerupController.powerups ) {
-					
 					if (curve.hitbox.hitTestObject(powerup)) {
 						controller.powerupController.activate(powerup, curve);
 					}
 				}
+				
+				// @todo curve collision
+				for each ( var curve2:Curve in curves) {
+						if (pixelCollision(curve, curve2.hitbox)) {
+							//curve2.stop = true;
+							remove(curve2);
+							break;
+							//curve2.alpha = 0.2;
+						}
+				}
+				
 				//
 				if (!curve.stop) curve.draw(); //@debug
 				// keys
@@ -64,9 +82,34 @@ package com.curve
 			}
 		}
 		
+		private function pixelCollision(clip1:DisplayObjectContainer, clip2:DisplayObjectContainer):Boolean {
+			var collision;
+			var twoRectangle:Rectangle = clip1.getBounds(clip1);// get bounds will only get it’s none rotate x,y,width,height
+			var oneOffset = clip1.transform.matrix;
+			// registation point always top left to make the bitmapdata draw every pixel of the movieclip.
+			oneOffset.tx = (clip1.x - clip2.x)-twoRectangle.x;
+			oneOffset.ty = (clip1.y - clip2.y)-twoRectangle.y;
+			var twoClipBmpData = new BitmapData(twoRectangle.width, twoRectangle.height, true, 0);
+			twoClipBmpData.draw(clip1, oneOffset);
+			var oneRectangle = clip2.getBounds(clip2);
+			var oneClipBmpData = new BitmapData(twoRectangle.width,twoRectangle.height, true, 0);
+			var twoOffset = clip2.transform.matrix;
+			twoOffset.tx = (clip2.x - clip2.x)-oneRectangle.x;
+			twoOffset.ty = (clip2.y - clip2.y)-oneRectangle.y;
+			oneClipBmpData.draw(clip2, twoOffset);
+			var onePoint = new Point(oneRectangle.x, oneRectangle.y);
+			var twoPoint = new Point(twoRectangle.x, twoRectangle.y);
+			if(oneClipBmpData.hitTest(onePoint, 255, twoClipBmpData, twoPoint, 255)) {
+				// pixels that have a slight alpha will not detect. make sure theres no alpha.
+				collision = true;
+			}
+			twoClipBmpData.dispose();
+			oneClipBmpData.dispose();
+			return collision;
+		}
+		
 		private function createCurve(xpos:Number, ypos:Number):void {
 			var curve:Curve = new Curve(xpos, ypos);
-			
 			curve.color = colors[colorIndex];
 			colorIndex++;
 			if (colorIndex >= colors.length) colorIndex = 0;
@@ -80,10 +123,17 @@ package com.curve
 			curves.push(curve);
 		}
 		
+		
+		// publics
 		public function restart():void {
 			for each(var curve:Curve in curves) {
 				curve.restart();
 			}
+		}
+		public function remove(curve:Curve):void {
+			curves.splice(curves.indexOf(curve), 1);
+			curve.dispose();
+			View.getStage().removeChild(curve);
 		}
 		public function removeAll():void {
 			for each(var curve:Curve in curves) {
@@ -97,7 +147,7 @@ package com.curve
 			make(n, function(){ createCurve( 400, 250); });
 		}
 		public function createAll():void {
-			if(this.numCurves) make(this.numCurves, function(){ createCurve( 400, 250); });
+			if(this.numCurves) make(this.numCurves, function(){ createCurve( Math.random() * 500, 250); });
 		}
 		public function stopAll():void {
 			for each( var curve:Curve in curves) {
