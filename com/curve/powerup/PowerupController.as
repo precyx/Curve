@@ -49,12 +49,13 @@ package com.curve.powerup
 			powerups.push(p);
 		}
 		public function createRandom():void {
-			var i:uint = Math2.rand(0, 4);
+			var i:uint = Math2.rand(0, 5);
 			var powerup:Powerup;
 			if (i == 0) powerup = new Whale();
 			if (i == 1) powerup = new Flash();
 			if (i == 2) powerup = new Ant();
 			if (i == 3) powerup = new Snail();
+			if (i == 4) powerup = new Sun();
 			powerup.x = Math.random() * stage.stageWidth;
 			powerup.y = Math.random() * stage.stageHeight;
 			powerups.push(powerup);
@@ -63,6 +64,7 @@ package com.curve.powerup
 		
 		public function activate(powerup:Powerup, curve:Curve):void {
 			if (!powerup.active) {
+				curve.addPowerupTimer(powerup);
 				powerup.powerupStart(curve);
 				powerup.addEventListener(GameEvent.POWERUP_END, powerupEnd);
 			}
@@ -70,6 +72,9 @@ package com.curve.powerup
 		
 		private function powerupEnd(e:GameEvent):void {
 			var powerup:Powerup = (e.target as Powerup);
+			for each(var curve:Curve in powerup.affectedCurves) {
+				curve.removePowerupTimer(powerup);
+			}
 			powerup.rotation = 90;
 			powerups.splice(powerups.indexOf(powerup), 1);
 			View.getPowerupLayer().removeChild(powerup);

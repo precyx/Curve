@@ -45,8 +45,8 @@ package com.curve
 			initVars();
 			//
 			createCurve( 400, 250);
+			//
 			addEventListener(Event.ENTER_FRAME, loopCurves);
-			
 		}
 		private function initVars():void {
 			SkyCollisionDetection.registerRoot(View.getStage());
@@ -60,9 +60,9 @@ package com.curve
 		private function loopCurves(e:Event):void {
 			for each( var curve:Curve in curves) {
 				// @todo powerup collision
-				for each( var powerup:Powerup in controller.powerupController.powerups ) {
-					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox,powerup)) {
-						controller.powerupController.activate(powerup, curve);
+				for each( var powerup:Powerup in Controller.powerupController.powerups ) {
+					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, powerup)) {
+						Controller.powerupController.activate(powerup, curve);
 					}
 				}
 				// @todo curve collision
@@ -116,10 +116,16 @@ package com.curve
 		}
 		public function removeAll():void {
 			for each(var curve:Curve in curves) {
+				curve.dispose();
 				View.getCurveLayer().removeChild(curve);
 				curve = null;
 			}
 			curves = new Vector.<Curve>();
+		}
+		public function clearAll():void {
+			for each(var curve:Curve in curves) {
+				curve.clear();
+			}
 		}
 		// @debug
 		public function createNum(n:uint):void {

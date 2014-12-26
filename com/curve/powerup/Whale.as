@@ -15,7 +15,7 @@ package com.curve.powerup
 		//
 		public function Whale():void{
 			super(Powerup.SELF_MODE, 5000, "resources/curve/powerups/whale_powerup.swf");
-			this.name = "BiggerSize";
+			this.name = "Bigger";
 		}
 		// Publics
 		override public function powerupStart(curve:Curve):void {

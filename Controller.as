@@ -21,23 +21,21 @@
 	public class Controller extends Sprite
 	{
 		// controllers
-		public var curveController:CurveController;
-		public var powerupController:PowerupController;
-		public var uiController:UiController;
+		static public var curveController:CurveController;
+		static public var powerupController:PowerupController;
+		static public var uiController:UiController;
 		//
 		//
 		public function Controller():void {
-			
 			// Module aktivieren
 			addChild(View.init());
 			Keys.init();
 			addChild(new Stats());
-			
 			// Controllers
 			curveController = new CurveController(this);
 			powerupController = new PowerupController(this);
 			uiController = new UiController(this);
-			
 		}
+		
 	}//end-class
 }//end-pack

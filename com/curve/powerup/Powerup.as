@@ -2,6 +2,7 @@ package com.curve.powerup
 {
 	// adobe
 	import com.kiko.display.Image;
+	import com.kiko.utils.DurationTimer;
 	import flash.display.Sprite
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
@@ -19,6 +20,7 @@ package com.curve.powerup
 		//
 		public static const ENEMY_MODE:String = "enemy_mode";
 		public  static const SELF_MODE:String = "self_mode";
+		public  static const GLOBAL_MODE:String = "global_mode";
 		//
 		public  static const SPEED_UP:String = "speed_up";
 		public  static const SPEED_DOWN:String = "speed_down";
@@ -26,21 +28,23 @@ package com.curve.powerup
 		private var _name:String;
 		private var mode:String;
 		private var lifetime:Number;
-		public var timer:Timer;
+		public var timer:DurationTimer;
 		private var img:Image;
 		public var active:Boolean = false;
-		protected var affectedCurves:Vector.<Curve>;
+		public var affectedCurves:Vector.<Curve>;
+		public var color:uint; //@debug
 		//
 		//
 		/**
-		 * @param	mode Anwendemodus Powerup.SELF_MODE, Powerup.ENEMY_MODE
+		 * @param	mode Anwendemodus Powerup.SELF_MODE, Powerup.ENEMY_MODE, Powerup.GLOBAL_MODE
 		 * @param	lifetime Lebenszeit in ms
 		 */
 		public function Powerup(mode:String, lifetime:Number, imgpath:String):void{
 			this.mode = mode;
 			this.lifetime = lifetime;
-			timer = new Timer(lifetime);
+			timer = new DurationTimer(lifetime);
 			affectedCurves = new Vector.<Curve>();
+			color = Math.random() * 0xffffff;
 			//
 			img = new Image(imgpath, imgloaded, true);
 			addChild(img);

@@ -9,7 +9,10 @@ package com.curve
 	import flash.display.Shape;
 	import flash.display.Sprite
 	import flash.display.CapsStyle;
+	import flash.display.JointStyle;
+	import flash.display.BlendMode;
 	import flash.events.TimerEvent;
+	import flash.filters.GlowFilter;
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 	import flash.utils.Timer;
@@ -44,11 +47,11 @@ package com.curve
 		private var angle = 0;
 		private var _stop = false; // @debug
 		private var _debug = false; // @debug
-		private var i:uint = 0;
-		//private var powerups:Vector.<Powerup>;
+		private var time:uint = 0;
+		private var powerups:Vector.<Powerup>;
 		// graphics
 		private var circle:Shape;
-		//private var powerupDisplay:Sprite;
+		private var powerupDisplay:Sprite;
 		public var hitbox:Sprite;
 		// ghost
 		private var _ghost = false;
@@ -60,6 +63,7 @@ package com.curve
 			this.graphics.moveTo(xpos, ypos);
 			this.xpos = xpos;
 			this.ypos = ypos;
+			//this.blendMode = BlendMode.INVERT;
 			angle = Math.random() * Math.PI * 2;
 			//
 			timer = new Timer(Math2.randFloat(200, holeMaxProbability));
@@ -73,14 +77,15 @@ package com.curve
 			View.getCurveLayer().addChild(hitbox);
 			hitbox.alpha = 0;
 			//
-			/*powerupDisplay = new Sprite();
-			View.getCurveLayer().addChild(powerupDisplay);*/
+			powerups = new Vector.<Powerup>();
+			powerupDisplay = new Sprite();
+			View.getEffectLayer().addChild(powerupDisplay);
 			
 		}
 		public function draw():void {
 			if (!ghost) {
 				/* #2 lineto render method */
-				if( i % 2 == 0){
+				if ( time % 3 == 0) {
 					if (ghostchanged) {
 						this.graphics.moveTo(xpos, ypos);
 						ghostchanged = false;
@@ -89,10 +94,16 @@ package com.curve
 				}
 			}
 			// powerup display
-			/*for each(var powerup:Powerup in powerups) {
-				powerupDisplay.
-			}*/
-			
+			powerupDisplay.graphics.clear();
+			for ( var j:uint = 0; j < powerups.length; j++) {
+				var powerup:Powerup = Powerup(powerups[j]);
+				powerupDisplay.rotation = angle / (Math.PI * 2) * 360 -180;
+				powerupDisplay.x = xpos;
+				powerupDisplay.y = ypos;
+				powerupDisplay.graphics.lineStyle(4, 0x333333, 0.6, false, "normal", CapsStyle.NONE);
+				var degree:Number = 360 - powerup.timer.time / powerup.timer.delay * 360;
+				drawArc(powerupDisplay, 0, 0, size/2+5+j*6, 0, degree, 5);
+			}
 			// circle
 			circle.graphics.clear();
 			circle.graphics.beginFill(color);
@@ -104,17 +115,17 @@ package com.curve
 			hitbox.graphics.clear();
 			hitbox.graphics.beginFill(0x000000, 1.0);
 			drawHalfCircle(hitbox.graphics, 0, 0, size / 2);
-			hitbox.x = xpos + (0.001*size*size +1) * Math.sin(angle + Math.PI / 2);
-			hitbox.y = ypos + (0.001*size*size +1) * Math.sin(angle);
+			hitbox.x = xpos + (0.001*size*size +1) * Math.sin(angle + Math.PI / 2); //@graph
+			hitbox.y = ypos + (0.001*size*size +1) * Math.sin(angle); //@graph
 			hitbox.rotation =  angle / (Math.PI*2) * 360 -90;
 			//View.getCurveLayer().setChildIndex(hitbox, numChildren - 1);
 			//
 			// movement
 			xpos += Math.cos(angle) * speed;
 			ypos += Math.sin(angle) * speed;
-			radius = curviness * (Math.sqrt(size)*0.3 + Math.sqrt(speed)*Math.sqrt(speed) );
+			radius = curviness * (Math.sqrt(size)*0.3 + speed );
 			angle += direction * (Math.PI*2 / radius * speed);
-			i++;			
+			time++;			
 		}
 		// events
 		private function ontime(e:TimerEvent):void {
@@ -145,15 +156,41 @@ package com.curve
 			this.graphics.lineStyle(size, color, 1, false, "normal", CapsStyle.NONE);
 			this.graphics.moveTo(xpos, ypos);
 		}
-		/*public function addPowerupTimer(powerup:Powerup):void {
+		public function addPowerupTimer(powerup:Powerup):void {
 			powerups.push(powerup);
-		}*/
+		}
+		public function removePowerupTimer(powerup:Powerup):void {
+			powerups.splice(powerups.indexOf(powerup), 1);
+		}
+		public function clear():void {
+			this.graphics.clear();
+			this.graphics.lineStyle(size, color, 1, false, "normal", CapsStyle.NONE);
+			this.graphics.moveTo(xpos, ypos);
+		}
 		public function dispose():void {
 			this.graphics.clear();
 			View.getCurveLayer().removeChild(hitbox);
 			hitbox = null;
 			View.getCurveLayer().removeChild(circle);
 			circle = null;
+			View.getEffectLayer().removeChild(powerupDisplay);
+			powerupDisplay = null;
+		}
+		
+		
+		// Privates
+		private function drawArc(sprite:Sprite, center_x:Number, center_y:Number, radius:Number, angle_from:Number, angle_to:Number, precision:uint) {
+			var deg_to_rad=0.0174532925;
+			var angle_diff=angle_to-angle_from;
+			var steps=Math.round(angle_diff*precision);
+			var angle=angle_from;
+			var px=center_x+radius*Math.cos(angle*deg_to_rad);
+			var py=center_y+radius*Math.sin(angle*deg_to_rad);
+			sprite.graphics.moveTo(px,py);
+			for (var i:int=1; i<=steps; i++) {
+				angle=angle_from+angle_diff/steps*i;
+				sprite.graphics.lineTo(center_x+radius*Math.cos(angle*deg_to_rad),center_y+radius*Math.sin(angle*deg_to_rad));
+			}
 		}
 		
 		
@@ -178,15 +215,15 @@ package com.curve
 		public function get ghost():Boolean {
 			return _ghost;
 		}
-		// @debug
-		public function set stop(b:Boolean) {
+		public function set stop(b:Boolean) {// @debug
 			this.timer.stop();
+			powerupDisplay.graphics.clear();
 			_stop = b;
 		}
-		public function get stop():Boolean {
+		public function get stop():Boolean {// @debug
 			return _stop;
 		}
-		public function set debug(b:Boolean) {
+		public function set debug(b:Boolean) {// @debug
 			if(b) {
 				hitbox.alpha = 1;
 				circle.alpha = 0;
@@ -197,7 +234,7 @@ package com.curve
 			}
 			_debug = b;
 		}
-		public function get debug():Boolean {
+		public function get debug():Boolean {// @debug
 			return _debug;
 		}
 	}//end-class

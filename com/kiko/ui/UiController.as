@@ -3,8 +3,10 @@ package com.kiko.ui
 	// adobe
 	import flash.display.Sprite
 	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.utils.getQualifiedClassName;
+	import flash.ui.Keyboard;
 	//
 	// own
 	import com.kiko.ui.buttons.*;
@@ -32,43 +34,53 @@ package com.kiko.ui
 			var box:Box = new Box( new BoxConfig( { minimizeMode:true} ));
 			View.getStage().addChild(box);
 			box.height = 350;
+			box.alpha = 0.5;
 			box.x = stage.stageWidth - box.width;
 			box.title = "Curve Control";
 			box.y = 0;
 			box.active = true;
 			box.addTextButton("Restart").addEventListener(MouseEvent.CLICK, function() {
-				controller.curveController.removeAll();
-				controller.curveController.createAll();
+				Controller.curveController.removeAll();
+				Controller.curveController.createAll();
 			});
+			View.getStage().addEventListener(KeyboardEvent.KEY_DOWN, keydown);
+			
 			box.addTextButton("Stop & New").addEventListener(MouseEvent.CLICK, function() {
-				controller.curveController.stopAll();
-				controller.curveController.createAll();
+				Controller.curveController.stopAll();
+				Controller.curveController.createAll();
 			});
 			box.addStepper("Num Curves", 1, 20, 1, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
-				controller.curveController.numCurves = s.value;
+				Controller.curveController.numCurves = s.value;
 			});
 			box.addStepper("Size", 0, 120, 7, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
-				controller.curveController.size = s.value;
+				Controller.curveController.size = s.value;
 			});
 			box.addStepper("Speed", 0, 35, 1.55, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
-				controller.curveController.speed = s.value;
+				Controller.curveController.speed = s.value;
 			});
 			box.addStepper("Curviness", 0, 250, 92, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
-				controller.curveController.curviness = s.value;
+				Controller.curveController.curviness = s.value;
 			});
 			box.addStepper("Holesize", 0, 2000, 160, 10).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
-				controller.curveController.holesize = s.value;
+				Controller.curveController.holesize = s.value;
 			});
 			box.addToggleButton("Debug").addEventListener(MouseEvent.CLICK, function(e) {
 				var s:ToggleButton = ToggleButton( e.currentTarget);
-				controller.curveController.debug = s.toggleOn;
+				Controller.curveController.debug = s.toggleOn;
 			});
 			
+		}
+		
+		private function keydown(e:KeyboardEvent):void {
+			if (e.keyCode == Keyboard.SPACE) {
+				Controller.curveController.removeAll();
+				Controller.curveController.createAll();
+			}
 		}
 	}//end-class
 }//end-pack

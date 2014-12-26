@@ -18,6 +18,7 @@ package
 		private static var view:View;
 		private static var powerupLayer:Sprite;
 		private static var curveLayer:Sprite;
+		private static var effectLayer:Sprite;
 		//
 		//
 		public function View():void { }
@@ -33,6 +34,8 @@ package
 				view.addChild(powerupLayer);
 				curveLayer = new Sprite();
 				view.addChild(curveLayer);
+				effectLayer = new Sprite();
+				view.addChild(effectLayer);
 				return view;
 			}
 		}
@@ -50,6 +53,9 @@ package
 		}
 		static public function getCurveLayer():Sprite {
 			return curveLayer;
+		}
+		static public function getEffectLayer():Sprite {
+			return effectLayer;
 		}
 	}//end-class
 }//end-pack
