@@ -26,7 +26,7 @@ package com.curve.powerup
 		private var _name:String;
 		private var mode:String;
 		private var lifetime:Number;
-		private var timer:Timer;
+		public var timer:Timer;
 		private var img:Image;
 		public var active:Boolean = false;
 		protected var affectedCurves:Vector.<Curve>;

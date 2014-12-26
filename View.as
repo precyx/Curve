@@ -9,13 +9,15 @@ package
 	// own
 	//
 	/*
-	 * View V 1.1
+	 * View - Version 1.1
 	 * MainView
 	 */
 	public class View extends Sprite
 	{
 		//
 		private static var view:View;
+		private static var powerupLayer:Sprite;
+		private static var curveLayer:Sprite;
 		//
 		//
 		public function View():void { }
@@ -24,8 +26,15 @@ package
 		 * Einmaliges erstellen (Singleton)
 		 */
 		static public function init():View {
-			view = new View();
-			return view;
+			if (view) throw new Error("View darf nur einmal mit init() erstellt werden.");
+			else{
+				view = new View();
+				powerupLayer = new Sprite();
+				view.addChild(powerupLayer);
+				curveLayer = new Sprite();
+				view.addChild(curveLayer);
+				return view;
+			}
 		}
 		/**
 		 * Interface
@@ -35,6 +44,12 @@ package
 		}
 		static public function getSelf():View {
 			return view;
+		}
+		static public function getPowerupLayer():Sprite {
+			return powerupLayer;
+		}
+		static public function getCurveLayer():Sprite {
+			return curveLayer;
 		}
 	}//end-class
 }//end-pack

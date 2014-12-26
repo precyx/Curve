@@ -56,13 +56,17 @@ package com.kiko.ui
 				var s:Stepper = Stepper( e.currentTarget);
 				controller.curveController.speed = s.value;
 			});
-			box.addStepper("Curviness", 0, 250, 67, 1).addEventListener(MouseEvent.CLICK, function(e) {
+			box.addStepper("Curviness", 0, 250, 92, 1).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
 				controller.curveController.curviness = s.value;
 			});
-			box.addStepper("Holesize", 0, 2000, 250, 10).addEventListener(MouseEvent.CLICK, function(e) {
+			box.addStepper("Holesize", 0, 2000, 160, 10).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
 				controller.curveController.holesize = s.value;
+			});
+			box.addToggleButton("Debug").addEventListener(MouseEvent.CLICK, function(e) {
+				var s:ToggleButton = ToggleButton( e.currentTarget);
+				controller.curveController.debug = s.toggleOn;
 			});
 			
 		}
