@@ -22,7 +22,7 @@ package com.curve.powerup
 			if (mode == Powerup.SELF_MODE) imgpath = "resources/curve/powerups/flash_powerup.swf";
 			else if (mode == Powerup.ENEMY_MODE) imgpath = "resources/curve/powerups/flash_enemy_powerup.swf";
 			else mode = null;
-			super(mode, Powerup.NORMAL_DURATION, imgpath);
+			super(mode, Powerup.SHORT_DURATION, imgpath);
 			this.name = "Faster";
 		}
 		// Publics

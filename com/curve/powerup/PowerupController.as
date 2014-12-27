@@ -48,17 +48,24 @@ package com.curve.powerup
 		
 		// Publics
 		public function createRandom():void {
-			var i:uint = Math2.rand(0, 6);
+			var i:uint = Math2.rand(0, 9);
 			var powerup:Powerup;
 			//powerup = new Sun(Powerup.SELF_MODE);
 			//if (i > 3) powerup = new Unlock();
-			//powerup = new Sun();
+			//
+			//powerup = new Reverse(Powerup.SELF_MODE);
+			//
+			if(1){ //@refractoring
 			if (i == 0) powerup = new Whale(Powerup.ENEMY_MODE);
 			if (i == 1) powerup = new Flash(Powerup.SELF_MODE);
 			if (i == 2) powerup = new Ant(Powerup.SELF_MODE);
 			if (i == 3) powerup = new Snail(Powerup.ENEMY_MODE);
 			if (i == 4) powerup = new Sun(Powerup.GLOBAL_MODE);
 			if (i == 5) powerup = new Unlock();
+			if (i == 6) powerup = new Ghost();
+			if (i == 7) powerup = new Reverse();
+			if (i == 8) powerup = new Whale(Powerup.SELF_MODE);
+			}
 			powerup.x = Math.random() * stage.stageWidth;
 			powerup.y = Math.random() * stage.stageHeight;
 			powerups.push(powerup);

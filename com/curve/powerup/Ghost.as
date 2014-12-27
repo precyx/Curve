@@ -1,4 +1,4 @@
-package com.curve.powerup
+﻿package com.curve.powerup
 {
 	// adobe
 	import flash.display.Sprite
@@ -12,29 +12,33 @@ package com.curve.powerup
 	 * Unlock - Version 1.3
 	 * View & Model
 	 */
-	public class Unlock extends Powerup
+	public class Ghost extends Powerup
 	{
 		//
 		//
 		//
-		public function Unlock():void{
-			super(Powerup.GLOBAL_MODE, 8000, "resources/curve/powerups/unlock_powerup.swf");
-			this.name = "Clear All Curves";
+		public function Ghost():void{
+			super(Powerup.SELF_MODE, Powerup.NORMAL_DURATION, "resources/curve/powerups/ghost_powerup.swf");
+			this.name = "Invincible";
 		}
 		// Publics
 		override public function powerupStart(triggerCurve:Curve):void {
 			super.powerupStart(triggerCurve);
-			Controller.curveController.walls.active = false;
+			for each( var curve:Curve in affectedCurves) {
+				curve.itemghost = true;
+			}
 		}
 		override protected function powerupEnd(e:TimerEvent):void {
 			super.powerupEnd(e);
-			// Wenn Unlock schon aktiv ist dann wird es nicht überschrieben
+			// Wenn Ghost schon aktiv ist dann wird es nicht überschrieben
 			// @refractoring
 			var activePowerups = Controller.powerupController.activePowerups;
 			for each ( var powerup:Powerup in activePowerups ) {
-				if (powerup is Unlock) return;
+				if (powerup is Ghost) return;
 			}
-			Controller.curveController.walls.active = true;
+			for each( var curve:Curve in affectedCurves) {
+				curve.itemghost = false;
+			}
 		}
 	}//end-class
 }//end-pack

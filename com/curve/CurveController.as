@@ -67,9 +67,11 @@ package com.curve
 				}
 				// @collision curves
 				for each ( var curve2:Curve in curves) {
-					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, curve2)) {
-						curve.stop = true;
-						//remove(curve);
+					if(!curve.itemghost){
+						if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, curve2)) {
+							curve.stop = true;
+							//remove(curve);
+						}
 					}
 				}
 				// @collision walls

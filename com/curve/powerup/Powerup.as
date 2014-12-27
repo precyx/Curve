@@ -22,11 +22,12 @@ package com.curve.powerup
 		public static const SELF_MODE:String = "self_mode";
 		public static const GLOBAL_MODE:String = "global_mode";
 		// colors
-		public static const RED:uint = 0xC80637;
-		public static const BLUE:uint = 0x0682E6;
+		public static const RED:uint = 0xFA0C30;
+		public static const BLUE:uint = 0x0684EA;
 		public static const YELLOW:uint = 0xF9A800;
 		// duration
 		public static const NORMAL_DURATION:uint = 5000;
+		public static const SHORT_DURATION:uint = 2500;
 		// interface
 		public var timer:DurationTimer;
 		public var active:Boolean = false;

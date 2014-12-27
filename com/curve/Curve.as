@@ -1,4 +1,4 @@
-package com.curve
+﻿package com.curve
 {
 	// adobe
 	import com.curve.powerup.Powerup;
@@ -17,7 +17,7 @@ package com.curve
 	import flash.ui.Keyboard;
 	import flash.utils.setTimeout;
 	import flash.utils.Timer;
-	
+	//
 	//
 	import com.kiko.utils.Math2;
 	//
@@ -30,7 +30,7 @@ package com.curve
 		// consts
 		private static const NORMAL_SPEED = 1.55; // std:1.55
 		private static const NORMAL_SIZE = 7; // std:7
-		private static const MIN_COLLISION_SIZE = 2;
+		private static const MIN_COLLISION_SIZE = 4;
 		// interface
 		public var xpos = 300;
 		public var ypos = 100;
@@ -41,6 +41,7 @@ package com.curve
 		public var direction = 0; // (0,1,-1)
 		public var leftKey:uint = Keyboard.LEFT;
 		public var rightKey:uint = Keyboard.RIGHT;
+		private var _reverseKeys:Boolean = false;
 		// internal
 		private var _size:Number = Curve.NORMAL_SIZE;
 		private var _color:uint = 0xff00aa;
@@ -55,9 +56,10 @@ package com.curve
 		private var powerupDisplay:Sprite;
 		public var hitbox:Sprite;
 		// ghost
-		private var _ghost = false;
+		private var ghost = false;
 		private var timer:Timer;
 		private var ghostchanged:Boolean = false;
+		private var _itemghost:Boolean = false;
 		//
 		//
 		public function Curve(xpos:Number = 0, ypos:Number = 0):void {
@@ -83,7 +85,7 @@ package com.curve
 			
 		}
 		public function draw():void {
-			if (!ghost) {
+			if (!ghost && !itemghost) {
 				/* #2 lineto render method */
 				if ( time % 3 == 0) {
 					if (ghostchanged) {
@@ -116,7 +118,9 @@ package com.curve
 			circle.graphics.drawCircle(
 			xpos - 1 * Math.sin(angle + Math.PI / 2), 
 			ypos - 1 * Math.sin(angle), 
-			size/2);
+			size / 2);
+			if (reverseKeys) { circle.graphics.beginFill(0);  circle.graphics.drawCircle(xpos, ypos, size / 2); }
+			View.getCurveLayer().setChildIndex(circle, View.getCurveLayer().numChildren - 1);
 			// hitbox
 			hitbox.graphics.clear();
 			hitbox.graphics.beginFill(0x000000, 1.0);
@@ -124,13 +128,12 @@ package com.curve
 			hitbox.x = xpos + (0.001*size*size +1) * Math.sin(angle + Math.PI / 2); //@graph
 			hitbox.y = ypos + (0.001*size*size +1) * Math.sin(angle); //@graph
 			hitbox.rotation =  angle / (Math.PI*2) * 360 -90;
-			//View.getCurveLayer().setChildIndex(hitbox, numChildren - 1);
 			//
 			// movement
 			xpos += Math.cos(angle) * speed;
 			ypos += Math.sin(angle) * speed;
 			
-			radius = curviness * (Math.sqrt(size)*0.3 + speed );
+			radius = curviness * (Math.sqrt(size)*0.3 + speed ); //@graph
 			angle += direction * (Math.PI*2 / radius * speed);
 			time++;			
 		}
@@ -138,13 +141,13 @@ package com.curve
 		private function ontime(e:TimerEvent):void {
 			ghost = ! ghost;
 			ghostchanged = true;
-			if (ghost) { timer.delay = holesize * ((1/speed) + size*0.06); }
-			else {  timer.delay = Math2.randFloat(200, holeMaxProbability); } //std:7000 
+			if (ghost) { timer.delay = holesize * ((1/speed) + size*0.06); }//@graph
+			else {  timer.delay = Math2.randFloat(200, holeMaxProbability); }
 		}
 		
 		// privates
 		private function drawHalfCircle(g:Graphics, x:Number, y:Number, r:Number):void {
-			r = Math.max(r, Curve.MIN_COLLISION_SIZE);
+			r = Math.max(r, Curve.MIN_COLLISION_SIZE/2);
 			var c1:Number=r * (Math.SQRT2 - 1);
 			var c2:Number=r * Math.SQRT2 / 2;
 			g.moveTo(x+r,y);
@@ -216,11 +219,23 @@ package com.curve
 		public function get size():Number {
 			return _size;
 		}
-		public function set ghost(b:Boolean):void {
-			_ghost = b;
+		public function set itemghost(b:Boolean):void {
+			_itemghost = b;
 		}
-		public function get ghost():Boolean {
-			return _ghost;
+		public function get itemghost():Boolean {
+			return _itemghost;
+		}
+		public function set reverseKeys(b:Boolean):void {
+			if( b != _reverseKeys){
+				var left:uint = leftKey;
+				var right:uint = rightKey;
+				leftKey = right;
+				rightKey = left;
+			}
+			_reverseKeys = b;
+		}
+		public function get reverseKeys():Boolean {
+			return _reverseKeys;
 		}
 		public function set stop(b:Boolean) {// @debug
 			this.timer.stop();
