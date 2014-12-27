@@ -106,9 +106,9 @@ package com.curve
 				powerupDisplay.rotation = angle / (Math.PI * 2) * 360 ;
 				powerupDisplay.x = xpos;
 				powerupDisplay.y = ypos;
-				powerupDisplay.graphics.lineStyle(4, powerup.color, 0.9, false, "normal", CapsStyle.NONE);
+				powerupDisplay.graphics.lineStyle(4, powerup.color, 0.9, false, "normal", CapsStyle.ROUND);
 				var degree:Number = 360 - powerup.timer.time / powerup.timer.delay * 360;
-				drawArc(powerupDisplay, 0, 0, size/2+5+j*6, 0, degree, 5);
+				drawArc(powerupDisplay, 0, 0, size/2+5+j*6, 0, degree, 1);
 			}
 			// circle
 			circle.graphics.clear();

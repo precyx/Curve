@@ -1,4 +1,4 @@
-package com.curve.powerup
+﻿package com.curve.powerup
 {
 	// adobe
 	import flash.display.Sprite
@@ -8,6 +8,10 @@ package com.curve.powerup
 	import com.curve.GameEvent;
 	import com.curve.Curve;
 	//
+	/*
+	 * Unlock - Version 1.3
+	 * View & Model
+	 */
 	public class Unlock extends Powerup
 	{
 		//
@@ -18,13 +22,13 @@ package com.curve.powerup
 			this.name = "Clear All Curves";
 		}
 		// Publics
-		override public function powerupStart(curve:Curve):void {
-			super.powerupStart(curve);
+		override public function powerupStart(triggerCurve:Curve):void {
+			super.powerupStart(triggerCurve);
 			Controller.curveController.walls.active = false;
 		}
 		override protected function powerupEnd(e:TimerEvent):void {
 			super.powerupEnd(e);
-			// Wenn Unlock schon aktiv ist dass wird es nicht deaktiviert
+			// Wenn Unlock schon aktiv ist dann wird es nicht überschrieben
 			var activePowerups = Controller.powerupController.activePowerups;
 			for each ( var powerup:Powerup in activePowerups ) {
 				if (powerup is Unlock) return;

@@ -13,14 +13,19 @@ package com.curve.powerup
 		//
 		//
 		//
-		public function Whale():void{
-			super(Powerup.SELF_MODE, 5000, "resources/curve/powerups/whale_powerup.swf");
+		public function Whale(mode:String):void{
+			var imgpath:String;
+			if (mode == Powerup.SELF_MODE) imgpath = "resources/curve/powerups/whale_powerup.swf";
+			else if (mode == Powerup.ENEMY_MODE) imgpath = "resources/curve/powerups/whale_enemy_powerup.swf";
+			super(mode, Powerup.NORMAL_DURATION, imgpath);
 			this.name = "Bigger";
 		}
 		// Publics
-		override public function powerupStart(curve:Curve):void {
-			super.powerupStart(curve);
-			curve.size *= 1.5;
+		override public function powerupStart(triggerCurve:Curve):void {
+			super.powerupStart(triggerCurve);
+			for each( var curve:Curve in affectedCurves) {
+				curve.size *= 1.5;
+			}
 		}
 		override protected function powerupEnd(e:TimerEvent):void {
 			super.powerupEnd(e);

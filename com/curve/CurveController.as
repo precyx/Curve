@@ -125,13 +125,7 @@ package com.curve
 			}
 			curves = new Vector.<Curve>();
 		}
-		public function clearAll():void {
-			for each(var curve:Curve in curves) {
-				curve.clear();
-			}
-		}
-		// @debug
-		public function createNum(n:uint):void {
+		public function createNum(n:uint):void {// @debug
 			make(n, function(){ createCurve( 400, 250); });
 		}
 		public function createAll():void {
@@ -145,6 +139,16 @@ package com.curve
 			for each( var curve:Curve in curves) {
 				curve.stop = true;
 			}
+		}
+		public function getAll():Vector.<Curve> {
+			return curves;
+		}
+		public function getAllExcept(exclusion:Curve):Vector.<Curve> {
+			var output:Vector.<Curve> = new Vector.<Curve>();
+			for each( var curve:Curve in curves ) {
+				if (curve != exclusion) output.push(curve);
+			}
+			return output;
 		}
 		
 		// helpers
