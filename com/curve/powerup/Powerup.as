@@ -33,6 +33,7 @@ package com.curve.powerup
 		public var active:Boolean = false;
 		public var affectedCurves:Vector.<Curve>;
 		public var color:uint; //@debug
+		public var imgpath:String; //@debug
 		//
 		//
 		/**
@@ -42,9 +43,10 @@ package com.curve.powerup
 		public function Powerup(mode:String, lifetime:Number, imgpath:String):void{
 			this.mode = mode;
 			this.lifetime = lifetime;
+			this.imgpath = imgpath;
 			timer = new DurationTimer(lifetime);
 			affectedCurves = new Vector.<Curve>();
-			color = Math.random() * 0xffffff;
+			color = Math.random() > 0.5 ? 0x0059B3 : 0xAD0527;
 			//
 			img = new Image(imgpath, imgloaded, true);
 			addChild(img);
@@ -58,14 +60,14 @@ package com.curve.powerup
 			this.active = true;
 			affectedCurves.push(curve);
 			this.alpha = 0.2;
-			trace("powerup start");
+			//trace("powerup start"); //@debug
 			timer.start();
 			timer.addEventListener(TimerEvent.TIMER, powerupEnd);
 		}
 		protected function powerupEnd(e:TimerEvent):void {
 			timer.stop();
 			timer.removeEventListener(TimerEvent.TIMER, powerupEnd);
-			trace("powerup end");
+			//trace("powerup end"); //@debug
 			dispatchEvent(new GameEvent(GameEvent.POWERUP_END));
 		}
 		

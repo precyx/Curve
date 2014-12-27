@@ -2,6 +2,7 @@ package com.curve
 {
 	// adobe
 	import com.curve.powerup.Powerup;
+	import com.kiko.display.Image;
 	import flash.desktop.Clipboard;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
@@ -63,7 +64,6 @@ package com.curve
 			this.graphics.moveTo(xpos, ypos);
 			this.xpos = xpos;
 			this.ypos = ypos;
-			//this.blendMode = BlendMode.INVERT;
 			angle = Math.random() * Math.PI * 2;
 			//
 			timer = new Timer(Math2.randFloat(200, holeMaxProbability));
@@ -87,9 +87,15 @@ package com.curve
 				/* #2 lineto render method */
 				if ( time % 3 == 0) {
 					if (ghostchanged) {
+						
 						this.graphics.moveTo(xpos, ypos);
 						ghostchanged = false;
 					}
+					//@cleanup
+					if (xpos > View.getStage().stageWidth) { xpos = 0 + speed; this.graphics.moveTo(xpos, ypos); }
+					else if (ypos > View.getStage().stageHeight) { ypos = 0+speed; this.graphics.moveTo(xpos, ypos);}
+					else if ( xpos < 0 ) { xpos = View.getStage().stageWidth - speed; this.graphics.moveTo(xpos, ypos);}
+					else if ( ypos < 0) { ypos = View.getStage().stageHeight - speed; this.graphics.moveTo(xpos, ypos);}
 					this.graphics.lineTo(xpos, ypos);
 				}
 			}
@@ -97,10 +103,10 @@ package com.curve
 			powerupDisplay.graphics.clear();
 			for ( var j:uint = 0; j < powerups.length; j++) {
 				var powerup:Powerup = Powerup(powerups[j]);
-				powerupDisplay.rotation = angle / (Math.PI * 2) * 360 -180;
+				powerupDisplay.rotation = angle / (Math.PI * 2) * 360 ;
 				powerupDisplay.x = xpos;
 				powerupDisplay.y = ypos;
-				powerupDisplay.graphics.lineStyle(4, 0x333333, 0.6, false, "normal", CapsStyle.NONE);
+				powerupDisplay.graphics.lineStyle(4, powerup.color, 0.9, false, "normal", CapsStyle.NONE);
 				var degree:Number = 360 - powerup.timer.time / powerup.timer.delay * 360;
 				drawArc(powerupDisplay, 0, 0, size/2+5+j*6, 0, degree, 5);
 			}
@@ -123,6 +129,7 @@ package com.curve
 			// movement
 			xpos += Math.cos(angle) * speed;
 			ypos += Math.sin(angle) * speed;
+			
 			radius = curviness * (Math.sqrt(size)*0.3 + speed );
 			angle += direction * (Math.PI*2 / radius * speed);
 			time++;			

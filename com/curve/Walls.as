@@ -15,8 +15,11 @@ package com.curve
 	public class Walls extends Shape
 	{
 		//
+		private var _active:Boolean;
 		//
-		public function Walls(w:Number, h:Number):void{
+		//
+		public function Walls(w:Number, h:Number):void {
+			_active = true;
 			var size = 5;
 			var color = 0x555555;
 			this.graphics.lineStyle(size, color, 1, false, "normal", CapsStyle.NONE, JointStyle.MITER );
@@ -25,6 +28,15 @@ package com.curve
 			this.graphics.lineTo(w,h);
 			this.graphics.lineTo(0,h);
 			this.graphics.lineTo(0,0);
+		}
+		
+		public function set active(a:Boolean):void {
+			if (a) this.alpha = 1;
+			else this.alpha = 0.3;
+			_active = a;
+		}
+		public function get active():Boolean {
+			return _active;
 		}
 	}//end-class
 }//end-pack

@@ -27,7 +27,7 @@ package com.curve
 		//
 		private var controller:Controller;
 		private var curves:Vector.<Curve>;
-		private var walls:Walls;
+		public var walls:Walls;
 		//
 		// @debug
 		public var size:Number;
@@ -59,24 +59,27 @@ package com.curve
 		}
 		private function loopCurves(e:Event):void {
 			for each( var curve:Curve in curves) {
-				// @todo powerup collision
+				// @collision powerup
 				for each( var powerup:Powerup in Controller.powerupController.powerups ) {
 					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, powerup)) {
 						Controller.powerupController.activate(powerup, curve);
 					}
 				}
-				// @todo curve collision
+				// @collision curves
 				for each ( var curve2:Curve in curves) {
 					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, curve2)) {
 						curve.stop = true;
 						//remove(curve);
 					}
 				}
-				// @todo walls collision
-				if (SkyCollisionDetection.bitmapHitTest(curve, walls)) {
-					//remove(curve);
-					curve.stop = true;
+				// @collision walls
+				if(walls.active){
+					if (SkyCollisionDetection.bitmapHitTest(curve.hitbox, walls)) {
+						//remove(curve);
+						curve.stop = true;
+					}
 				}
+				//trace( Controller.powerupController.activePowerups.length ); @debug
 				//
 				if (!curve.stop) curve.draw(); //@debug
 				// keys
@@ -132,7 +135,11 @@ package com.curve
 			make(n, function(){ createCurve( 400, 250); });
 		}
 		public function createAll():void {
-			if(this.numCurves) make(this.numCurves, function(){ createCurve( Math.random() * 500, Math.random() * 500); });
+			if (this.numCurves) make(this.numCurves, function() { 
+				createCurve( 
+				Math.random() * View.getStage().stageWidth, 
+				Math.random() * View.getStage().stageHeight); 
+			});
 		}
 		public function stopAll():void {
 			for each( var curve:Curve in curves) {
