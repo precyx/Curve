@@ -21,11 +21,9 @@ package com.kiko.ui
 		//
 		private var boxes:Vector.<Box>;
 		private var stage:Stage;
-		private var controller:Controller;
 		//
 		//
-		public function UiController(controller:Controller ):void{
-			this.controller = controller;
+		public function UiController():void{
 			stage = View.getStage();
 			createBox();
 		}
@@ -65,7 +63,7 @@ package com.kiko.ui
 				var s:Stepper = Stepper( e.currentTarget);
 				Controller.curveController.curviness = s.value;
 			});
-			box.addStepper("Holesize", 0, 2000, 160, 10).addEventListener(MouseEvent.CLICK, function(e) {
+			box.addStepper("Holesize", 0, 2000, 140, 10).addEventListener(MouseEvent.CLICK, function(e) {
 				var s:Stepper = Stepper( e.currentTarget);
 				Controller.curveController.holesize = s.value;
 			});

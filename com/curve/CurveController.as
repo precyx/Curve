@@ -25,7 +25,6 @@ package com.curve
 	public class CurveController extends Sprite
 	{
 		//
-		private var controller:Controller;
 		private var curves:Vector.<Curve>;
 		public var walls:Walls;
 		//
@@ -40,8 +39,7 @@ package com.curve
 		private var colorIndex:uint = 0;
 		//
 		//
-		public function CurveController(controller:Controller):void {
-			this.controller = controller;
+		public function CurveController():void {
 			initVars();
 			//
 			createCurve( 400, 250);

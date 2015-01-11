@@ -1,4 +1,4 @@
-
+﻿
 
 package com.curve.powerup
 {
@@ -27,18 +27,16 @@ package com.curve.powerup
 		private var stage:Stage;
 		public var powerups:Vector.<Powerup>;
 		public var activePowerups:Vector.<Powerup>;
-		private var controller:Controller;
 		private var timer:Timer;
 		//
 		//
-		public function PowerupController(controller:Controller):void {
-			this.controller = controller;
+		public function PowerupController():void {
 			this.stage = View.getStage();
 			powerups = new Vector.<Powerup>();
 			activePowerups = new Vector.<Powerup>;
 			//
 			timer = new Timer(Math2.rand(500, 1000));
-			timer.start();
+			//timer.start();
 			timer.addEventListener(TimerEvent.TIMER, timertick);
 		}
 		private function timertick(e:TimerEvent):void {
@@ -72,21 +70,18 @@ package com.curve.powerup
 			View.getPowerupLayer().addChild(powerup);
 		}
 		public function activate(powerup:Powerup, triggerCurve:Curve):void {
-			if (!powerup.active) {
+			if (!powerup.active && isAllowed(powerup)) {
 				// powerup modes
 				if (powerup.mode == Powerup.SELF_MODE) {
 					powerup.affectedCurves.push(triggerCurve);
-					powerup.color = Powerup.BLUE;
 				}
 				else if (powerup.mode == Powerup.ENEMY_MODE) {
 					powerup.affectedCurves = Controller.curveController.getAllExcept(triggerCurve);
-					//trace(powerup.affectedCurves.length);
-					powerup.color = Powerup.RED;
 				}
 				else if (powerup.mode == Powerup.GLOBAL_MODE) {
 					powerup.affectedCurves = Controller.curveController.getAll();
-					powerup.color = Powerup.YELLOW;
 				}
+				// start powerup
 				for each( var affectedCurve:Curve in powerup.affectedCurves ) {
 					affectedCurve.addPowerupTimer(powerup);
 				}
@@ -95,7 +90,7 @@ package com.curve.powerup
 				powerup.addEventListener(GameEvent.POWERUP_END, powerupEnd);
 			}
 		}
-		private function powerupEnd(e:GameEvent):void {
+		private function powerupEnd(e:GameEvent):void { //@event
 			var powerup:Powerup = (e.target as Powerup);
 			for each(var curve:Curve in powerup.affectedCurves) {
 				curve.removePowerupTimer(powerup);
@@ -106,7 +101,16 @@ package com.curve.powerup
 			View.getPowerupLayer().removeChild(powerup);
 			//trace(powerups.length); //@debug
 		}
-	
+		public function isAllowed(powerup:Powerup):Boolean {//@naming
+			if (activePowerups.length == 0) return true;
+			/*if ( powerup.stackable ) return true;
+			else {
+				for each( var p:Powerup in activePowerups) {
+					if ( p.name == powerup.name ) return false;
+				}
+			}*/ //@feature stackable
+			return true;
+		}
 		
 		
 	}//end-class

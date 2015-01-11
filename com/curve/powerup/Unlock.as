@@ -18,7 +18,7 @@ package com.curve.powerup
 		//
 		//
 		public function Unlock():void{
-			super(Powerup.GLOBAL_MODE, 8000, "resources/curve/powerups/unlock_powerup.swf");
+			super(Powerup.GLOBAL_MODE, 8000, "resources/curve/powerups/unlock_powerup.swf", false);
 			this.name = "Clear All Curves";
 		}
 		// Publics

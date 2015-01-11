@@ -1,4 +1,4 @@
-﻿package com.curve
+package com.curve
 {
 	// adobe
 	import com.curve.powerup.Powerup;
@@ -36,7 +36,7 @@
 		public var ypos = 100;
 		public var curviness = 92; //std:92
 		public var speed = Curve.NORMAL_SPEED;
-		public var holesize = 160; // std:280
+		public var holesize = 140; // std:140
 		public var holeMaxProbability = 5000; // std:5000
 		public var direction = 0; // (0,1,-1)
 		public var leftKey:uint = Keyboard.LEFT;
