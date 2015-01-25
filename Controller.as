@@ -32,7 +32,11 @@
 			// Module aktivieren
 			addChild(View.init());
 			Keys.init();
-			addChild(new Stats());
+			//
+			var s:Stats = new Stats();
+			addChild(s);
+			s.y = stage.stageHeight - s.height;
+			
 			// Controllers aktivieren
 			screenController = new ScreenController();
 			curveController = new CurveController();

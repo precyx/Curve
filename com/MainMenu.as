@@ -2,6 +2,7 @@ package com
 {
 	// adobe
 	import flash.display.Sprite
+	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	//
 	// own
@@ -14,11 +15,13 @@ package com
 		private var sw:Number;
 		private var sh:Number;
 		//
+		// public
+		public var playButton:TextIconButton;
+		//
 		// graphics
 		private var rings:Image;
 		private var globalSettings:FlatIconButton;
-		private var menuBoard:Sprite;
-		private var logo:Image;
+		private var menuBoard:MenuBoard;
 		//
 		// effects
 		private var dropshadow:DropShadowFilter = new DropShadowFilter(0, 0, 0, 0.05, 15, 15, 1, 3);
@@ -34,32 +37,25 @@ package com
 				rings.y = sh / 2 - 70;
 			}, true, false);
 			addChild(rings);
-			rings.alpha = 0.5;
+			rings.alpha = 0.1;
 			
-			
-			menuBoard = new Sprite();
-			menuBoard.graphics.beginFill(0xffffff);
-			menuBoard.graphics.drawRect(0, 0, 295, 448);
-			addChild(menuBoard);
-			menuBoard.filters = [dropshadow];
+			menuBoard = new MenuBoard();
 			menuBoard.x = sw / 2 - menuBoard.width / 2;
+			addChild(menuBoard);
+			
+			menuBoard.addEventListener(MouseEvent.MOUSE_OVER, function() { 
+				rings.alpha = 0.2;
+			} );
+			menuBoard.addEventListener(MouseEvent.MOUSE_OUT, function() { 
+				rings.alpha = 0.1;
+			} );
 			
 			
 			globalSettings = new FlatIconButton(PATH + "settings2_icon.swf", function() {
 				globalSettings.x = sw - globalSettings.width;
 				globalSettings.y = 0;
-				
 			});
 			addChild(globalSettings);
-			
-			logo = new Image(PATH + "logo.swf", function() {
-				logo.x = sw / 2; 
-				logo.y = logo.height/2 + 25;
-			},true,false);
-			addChild(logo);
-			
-			
-			
 		}
 	}//end-class
 }//end-pack
